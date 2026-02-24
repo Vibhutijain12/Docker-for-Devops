@@ -89,3 +89,25 @@ docker logs <container-name>
 docker stop <container-name> && docker remove <container-name>
 ```
 
+##### SQLite3 Database Items
+
+Once the application is up and running and storing the data properly, we can persist the data as well through volumes.
+
+1. How to open the databases:
+
+```bash
+sqlite3 database.db
+```
+
+2. Check the tables
+
+```bash
+.tables
+items
+```
+
+3. View all the data stored inside the database, even if the container stopped working or terminated.
+
+```bash
+SELECT * FROM items;
+```
