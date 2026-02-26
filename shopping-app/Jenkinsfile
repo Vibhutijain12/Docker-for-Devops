@@ -1,0 +1,69 @@
+pipeline{
+    agent
+    {
+        label "dev"
+    }
+    stages
+    {
+        stage("Code Repo Clone")
+        {
+            steps
+            {
+                git url: "https://github.com/Vibhutijain12/Docker-for-Devops.git", branch: "main"
+                echo "Code repository has cloned"
+            }
+        }
+        stage("Selecting the project")
+        {
+            steps
+            {
+                echo "using the shopping app"
+                dir("shopping-app")
+                {
+                    sh "ls -la"
+                }
+            }
+        }
+        stage("Building Docker image")
+        {
+            steps
+            {
+                 dir("shopping-app") 
+                 {
+                     sh "docker build -t shopping-app:latest ."
+                 }
+                 echo "Image has been built"
+            }
+        }
+        stage("Push to DockerHub") 
+        {
+            steps 
+            {
+                withCredentials([usernamePassword(
+                    credentialsId:"dockerHub",
+                    passwordVariable:"dockerHubPass",
+                    usernameVariable:"dockerHubUser"
+                )]) 
+                {
+                    sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPass}"
+                    sh "docker tag shopping-app:latest ${env.dockerHubUser}/shopping-app:latest"
+                    sh "docker push ${env.dockerHubUser}/shopping-app:latest"
+                }
+                echo 'Image pushed to DockerHub successfully'
+            }
+        }
+        
+        stage("Deploy") 
+        {
+            steps 
+            {
+                dir("shopping-app") 
+                {
+                    sh "docker compose down || true"
+                    sh "docker compose up -d"
+                }
+                echo 'Deployment done successfully'
+            }
+        }
+    }
+}
