@@ -27,6 +27,7 @@ This project focuses on understanding:
 ├── app.py
 ├── database.db
 ├── docker-compose.yml
+├── Jenkinsfile
 ├── requirements.txt
 ├── sqlite
 │   └── database.db
