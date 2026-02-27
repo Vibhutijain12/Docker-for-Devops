@@ -4,5 +4,5 @@ services:
       context: .
     ports:
       - "5000:5000"
-    volumes:
-      - ./sqlite/database.db:/app/database.db
+    volumes: []
+#  - ./sqlite/database.db:/app/database.db
